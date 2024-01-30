@@ -1,39 +1,39 @@
 
 const $ = document;
-const inputTodo = $.querySelector(".form-control"); // ورودی متن تسک
-const addBtn = $.getElementById("addButton"); // دکمه افزودن تسک
-const clearTodoListBtn = $.getElementById("clearButton"); // دکمه حذف همه تسک‌ها
-const todoUl = $.getElementById("todoList"); // لیست تسک‌ها
-const todoList = $.querySelectorAll(".well"); // تمام عناصر "well" در لیست تسک‌ها
+const inputTodo = $.querySelector(".form-control");
+const addBtn = $.getElementById("addButton"); 
+const clearTodoListBtn = $.getElementById("clearButton"); 
+const todoUl = $.getElementById("todoList"); 
+const todoList = $.querySelectorAll(".well"); 
 
 
-// افزودن تسک جدید به لیست و ذخیره در localStorage
+
 function addTodo() {
-    if (inputTodo.value) { // اگر ورودی خالی نباشد
-        let liElem = createTodo(); // یک li ایجاد میشود
+    if (inputTodo.value) { 
+        let liElem = createTodo();
         todoUl.append(liElem);
         inputTodo.value = "";
         let liText = liElem.innerText.split(" ");
         let jsonTextSet = JSON.stringify([{ todo: liText[0], status: "UnComplete" }]);
         let jsonTextGet = JSON.parse(localStorage.getItem("todoList"));
 
-        // اضافه کردن تسک جدید به Localstorage
-        if (jsonTextGet) { // در صورت بودن اطلاعات در Localstorage
+        
+        if (jsonTextGet) { 
             jsonTextGet.push(JSON.parse(jsonTextSet)[0]);
             localStorage.setItem("todoList", JSON.stringify(jsonTextGet));
         } else {
             localStorage.setItem("todoList", jsonTextSet);
         }
     }
-    inputTodo.focus() // بعد از اینکه تسک جدید ایجاد شد نشانه گر موس به داخل Input برمیگردد
+    inputTodo.focus()
 }
 
-// ایجاد المان تسک جدید
+
 function createTodo(text = inputTodo.value, status = "UnComplete") {
     const newTodo = $.createElement("li");
     let success;
-    // بررسی پارامترها
-    if (status === "UnComplete") { // در صورت تکمیل نبودن تسک
+    
+    if (status === "UnComplete") { 
         newTodo.className = "well";
         success = "Complete";
     } else {
@@ -48,13 +48,13 @@ function createTodo(text = inputTodo.value, status = "UnComplete") {
     return newTodo;
 }
 
-// حذف تمام تسک‌ها از لیست و localStorage
+
 function clearAllTodo() {
     todoUl.innerHTML = ""
     localStorage.removeItem("todoList");
 }
 
-// تغییر وضعیت تسک از تکمیل به ناتکمیل و بالعکس
+
 function completeTodo(event) {
     let liText = event.target.parentElement.innerText.split(" ");
     let todoData = JSON.parse(localStorage.getItem("todoList"));
@@ -79,7 +79,7 @@ function completeTodo(event) {
     localStorage.setItem("todoList", JSON.stringify(todoData));
 }
 
-// حذف یک تسک از لیست و localStorage
+
 function deleteTodo(event) {
     let todoData = JSON.parse(localStorage.getItem("todoList"));
     let liText = event.target.parentElement.innerText;
@@ -92,7 +92,7 @@ function deleteTodo(event) {
     localStorage.setItem("todoList", JSON.stringify(todoData));
 }
 
-// بازیابی اطلاعات از localStorage و افزودن تسک‌ها به لیست
+
 function getData() {
     let data = JSON.parse(localStorage.getItem("todoList"));
     if (data) {
@@ -102,7 +102,7 @@ function getData() {
     }
 }
 
-// اضافه کردن listener به المنتها و فراخوانی توابع
+
 addBtn.addEventListener("click", addTodo);
 inputTodo.addEventListener("keydown", function (event){
     if(event.key === "Enter"){
@@ -111,8 +111,8 @@ inputTodo.addEventListener("keydown", function (event){
 })
 
 todoList.forEach(function (item) {
-    item.children[1].addEventListener("click", completeTodo); // افزودن event به دکمه تکمیل
-    item.children[2].addEventListener("click", deleteTodo); // افزودن event به دکمه حذف
+    item.children[1].addEventListener("click", completeTodo); 
+    item.children[2].addEventListener("click", deleteTodo);
 });
 
 clearTodoListBtn.addEventListener("click", clearAllTodo);
